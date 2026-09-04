@@ -15,7 +15,7 @@
 
 class ViewHome extends View {
 
-    public function displayMain($confirmationMessage = '', $players = []): ViewHome {
+    public function displayMain($confirmationMessage = '', $players = []) {
         echo '<main>
     <h2>Ajouter un joueur</h2>
     <form method="post" action="">
