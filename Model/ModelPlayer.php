@@ -5,17 +5,11 @@ require_once 'Model.php';
 
 // Dans le fichier ModelPlayer.php, créez la classe ModelPlayer. Elle possède des méthodes qui envoie des requêtes à la BDD au sein de Try…Catch. Dans chaque cas, le Catch attrape l’exception et affiche le message d’erreur grâce à die() :
 
-// - add() : requête pour enregistrer un player en connaissant son pseudo, son score et l’id de sa team (la clé étrangère id_team).
-
-// - delete() : requête pour supprimer un player en connaissant son id.
-
-// - update() requête pour mettre à jour les données d’un player existant grâce à son id, en connaissant son pseudo, son score et l’id de sa team (la clé étrangère id_team).
-
 class ModelPlayer extends Model{
     private ?int $id_player;
     private ?string $pseudo;
     private ?string $score;
-    private ?int $id6team;
+    private ?int $id_team;
     
     private PDO $bdd;
 
@@ -43,23 +37,60 @@ class ModelPlayer extends Model{
             die($error->getMessage());
         }
     }
+
     // - findByPseudo() : requête pour récupérer qu’un seul player grâce à son pseudo. Elle retourne un tableau associatif.
-    public function findByPseudo(): string{
-        return $this->pseudo;
+    public function findByPseudo(string $pseudo) {
+    try {
+        $stmt = $this->pdo->prepare("SELECT * FROM player WHERE pseudo = :pseudo");
+        $stmt->execute([
+            'pseudo' => $pseudo
+        ]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        die('Erreur findByPseudo : ' . $e->getMessage());
     }
+}
 
-    public function add(){
-        //instances des objets :
-        $player = new ModelPlayer('Thiago', 500, 2);
+    // - add() : requête pour enregistrer un player en connaissant son pseudo, son score et l’id de sa team (la clé étrangère id_team).
+    public function add(string $pseudo, int $score, int $id_team) {
+    try {
+        $stmt = $this->pdo->prepare("INSERT INTO player (pseudo, score, id_team) VALUES (:pseudo, :score, :id_team)");
+        $stmt->execute([
+            'pseudo' => $pseudo,
+            'score' => $score,
+            'id_team' => $id_team
+        ]);
+    } catch (PDOException $e) {
+        die('Erreur add : ' . $e->getMessage());
     }
+}
     
-    public function delete(){
-
+    // - delete() : requête pour supprimer un player en connaissant son id.
+    public function delete(int $id_player) {
+    try {
+        $stmt = $this->pdo->prepare("DELETE FROM player WHERE id_player = :id_player");
+        $stmt->execute([
+            'id_player' => $id_player
+        ]);
+    } catch (PDOException $e) {
+        die('Erreur delete : ' . $e->getMessage());
     }
+}
 
-    public function update(){
-
+    // - update() requête pour mettre à jour les données d’un player existant grâce à son id, en connaissant son pseudo, son score et l’id de sa team (la clé étrangère id_team).
+    public function update(int $id_player, string $pseudo, int $score, int $id_team) {
+    try {
+        $stmt = $this->pdo->prepare("UPDATE player SET pseudo = :pseudo, score = :score, id_team = :id_team WHERE id_player = :id_player");
+        $stmt->execute([
+            'id_player' => $id_player,
+            'pseudo' => $pseudo,
+            'score' => $score,
+            'id_team' => $id_team
+        ]);
+    } catch (PDOException $e) {
+        die('Erreur update : ' . $e->getMessage());
     }
+}
 }
 
 ?>

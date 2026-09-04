@@ -1,5 +1,8 @@
 <?php
 
+require_once 'View.php';
+require_once 'ViewHome.php';
+
 // Dans le fichier ViewHome.php : créez la classe ViewHome.
 
 // - méthode displayMain() : effectue un echo de la partie HTML correspondant au <main>. Son but est d’avoir un formulaire d’ajout de joueur (pseudo, score, et un menu déroulant pour les teams Chaque Option de ce Select associe un nom d’équipe de la base de données à la valeur de son id. Pour les besoins de l’exercice, faite cela en dur dans le HTML, sans utiliser de requête à la BDD :
